@@ -1,0 +1,189 @@
+function startGame(){
+	
+	document.getElementById('startMenu').innerHTML = "";
+	document.getElementById('startMenu').innerHTML = "</p> What is your name? </p>" + 
+		"<input type='text' maxlength='512' id='nameSelect' class='searchField'/>" +
+		"<button onclick='confirmName();'> Confirm </button>";
+		
+}
+
+function confirmName(){
+	
+	playerName = document.getElementById('nameSelect').value;
+	document.getElementById('startMenu').innerHTML = "";
+	document.getElementById('startMenu').innerHTML = "</p> What Class do you want to be? </p>" +
+		"<button onclick='confirmClassWarrior();'> Warrior </button> </br></br>" +
+		"<button onclick='confirmClassMage();'> Mage </button> </br></br>" +
+		"<button onclick='confirmClassRanger();'> Ranger </button>";
+	
+}
+
+function confirmClassWarrior(){
+	
+	playerClass = "Warrior";
+	playerStatArray = baseWarrior;
+	playerEquipArray = warriorBaseEquip;
+	document.getElementById('startMenu').innerHTML = playerName + "</br></br>" + statName + 
+		"</br></br>" + playerStatArray + "</br></br>" + playerEquipArray + "</br></br> <button onclick='battleMob();'> Test Battle </button>";
+	
+}
+
+function confirmClassMage(){
+	
+	playerClass = "Mage";
+	playerStatArray = baseMage;
+	playerEquipArray = mageBaseEquip;
+	document.getElementById('startMenu').innerHTML = playerName + "</br></br>" + statName + 
+		"</br></br>" + playerStatArray + "</br></br>" + playerEquipArray + "</br></br> <button onclick='battleMob();'> Test Battle </button>";
+		
+}
+
+function confirmClassRanger(){
+	
+	playerClass = "Ranger";
+	playerStatArray = baseRanger;
+	playerEquipArray = rangerBaseEquip;
+	document.getElementById('startMenu').innerHTML = playerName + "</br></br>" + statName + 
+		"</br></br>" + playerStatArray + "</br></br>" + playerEquipArray + "</br></br> <button onclick='battleScreen();'> Test Battle </button>";
+	
+		
+}
+
+function damageDealt(monster){
+	
+	damage = playerStatArray[2];
+	monsterHealth = allEnemyStats[enemyList.indexOf(monster)][2];
+	alert("The monster has: " + monsterHealth - damage + "health left")
+	
+}
+
+function attackSelect(){
+	
+	var enemyAttackChoice = " ";
+	for (i=0 ; i<enemyStartParty.length; i++){
+		
+		enemyAttackChoice += "<button onclick='damageDealt(" + enemyStartParty[i] + ");'>" + enemyStartParty[i] + "</button>";
+		
+	}
+	
+	document.getElementById('battleScreen').innerHTML = enemyAttackChoice;
+		
+	
+	
+}
+
+function battleScreen() {
+	
+	
+	
+		document.getElementById('startMenu').innerHTML = " ";
+		document.getElementById('battleScreen').innerHTML = "<button onclick='attackSelect();'> Attack </button> <button> Defend </button> </br></br> <button> Run </button>";
+		
+		
+	
+	
+}
+
+function enemyAmount() {
+    
+    return Math.round(Math.floor( Math.random() * ( 1 + 5 - 1 ) ) + 1);
+    
+}
+
+function enemyType() {
+    return Math.round(Math.floor( Math.random() * ( 1 + 5 - 0 ) ) + 0);
+}
+
+function battleMob(){
+	enemyStartParty = [];
+	enemyCount = enemyAmount();
+	for (i=0; i < enemyCount; i++){
+		
+		enemyStartParty.push(enemyList[enemyType()]);
+		
+	}
+
+	alert(enemyStartParty);
+	battleScreen();
+		
+}
+
+function battleEnd(){
+	
+	for (i=0; i<enemyDefeated.length; i++) {
+		
+		earnedExp += enemyExpList[enemyList.indexOf(enemyDefeated[i])]
+	
+	}
+	
+	expCheck();
+}
+
+function expCheck() {
+	
+	neededExp = expCurve[currentLvl];
+	currentExp += earnedExp;
+	while (currentExp > neededExp) {
+		
+		currentExp -= neededExp;
+		levelUp();
+		neededExp = expCurve[currentLvl];
+	}
+	
+	alert("You are now Lvl: " + currentLvl)
+	
+}
+// Level ups your character
+function levelUp(){
+	
+	currentLvl++; 
+	if (playerClass == "Warrior") {
+		
+		for (var i = 0; i < playerStatArray.length; i++){
+			
+			playerStatArray[i] += warriorStatChange[i];
+			
+		}
+		
+	} else if (playerClass == "Ranger") {
+		
+		for (var i = 0; i < playerStatArray.length; i++){
+			
+			playerStatArray[i] += rangerStatChange[i];
+			
+		}		
+		
+	} else {
+		
+		for (var i = 0; i < playerStatArray.length; i++){
+			
+			playerStatArray[i] += mageStatChange[i];
+			
+		}		
+		
+	}
+	
+}
+
+function startMenuBack(){
+	
+	document.getElementById('optionMenu').innerHTML = " ";
+	document.getElementById('loadMenu').innerHTML = " ";
+	document.getElementById('startMenu').innerHTML = "<button>Start</button> </br></br>" + "<button onclick='loadMenu();'>Load</button> </br></br>" + 
+													 "<button onclick='optionMenu();'>Options</button>";
+}
+
+function loadMenu() {
+	
+	document.getElementById('startMenu').innerHTML = " ";
+	document.getElementById('loadMenu').innerHTML = " <button> Save Game 1 </button> </br></br> <button> Save Game 2 </button>" + 
+													"</br></br> <button> Save Game 3 </button> </br></br> <button onclick='startMenuBack();'> Back </button>";
+	
+}
+
+function optionMenu(){
+	
+	document.getElementById('startMenu').innerHTML = " ";
+	document.getElementById('optionMenu').innerHTML = "<button> Difficulty </button> </br></br> <button> Sound </button> </br></br> <button> Credits </button> </br></br> <button onclick='startMenuBack();'> Back </button>";
+	
+}
